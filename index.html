@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .calculator {
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 320px;
+        }
+        .display {
+            background-color: #f8f8f8;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: right;
+            font-size: 24px;
+            margin-bottom: 15px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: #e0e0e0;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #d0d0d0;
+        }
+        .operator {
+            background-color: #ff9800;
+            color: white;
+        }
+        .operator:hover {
+            background-color: #f57c00;
+        }
+        .equals {
+            background-color: #4caf50;
+            color: white;
+        }
+        .equals:hover {
+            background-color: #45a049;
+        }
+        .clear {
+            background-color: #f44336;
+            color: white;
+        }
+        .clear:hover {
+            background-color: #d32f2f;
+        }
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        .tab {
+            flex: 1 0 25%;
+            text-align: center;
+            padding: 10px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 8px;
+            margin: 2px;
+        }
+        .tab:hover {
+            background-color: #d0d0d0;
+        }
+        .tab.active {
+            background-color: #ff9800;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .advanced-input {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .advanced-input label {
+            margin-bottom: 5px;
+        }
+        .advanced-input input, .advanced-input select {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .advanced-input button {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .advanced-input button:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="tabs">
+            <div class="tab active" data-tab="basic">Basic</div>
+           
+            <div class="tab" data-tab="area">Area</div>
+            <div class="tab" data-tab="volume">Volume</div>
+            <div class="tab" data-tab="time">Time</div>
+            <div class="tab" data-tab="finance">Finance</div>
+            <div class="tab" data-tab="date">Date</div>
+            <div class="tab" data-tab="discount">Discount</div>
+            <div class="tab" data-tab="numeric">Numeric</div>
+            <div class="tab" data-tab="speed">Speed</div>
+            <div class="tab" data-tab="temperature">Temperature</div>
+            <div class="tab" data-tab="bmi">BMI</div>
+        </div>
+        <div class="display" id="display">0</div>
+        <div class="tab-content active" id="basic">
+            <div class="buttons">
+                <button class="clear">C</button>
+                <button>(</button>
+                <button>)</button>
+                <button class="operator">/</button>
+                <button>7</button>
+                <button>8</button>
+                <button>9</button>
+                <button class="operator">*</button>
+                <button>4</button>
+                <button>5</button>
+                <button>6</button>
+                <button class="operator">-</button>
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button class="operator">+</button>
+                <button>0</button>
+                <button>.</button>
+                <button class="equals">=</button>
+                <button onclick="handleScientific('sin')">sin</button>
+                <button onclick="handleScientific('cos')">cos</button>
+                <button onclick="handleScientific('tan')">tan</button>
+                <button onclick="handleScientific('log')">log</button>
+                <button onclick="handleScientific('ln')">ln</button>
+                <button onclick="handleScientific('sqrt')">√</button>
+                <button onclick="handleScientific('pow')">x^y</button>
+                <button onclick="handleScientific('pi')">π</button>
+            </div>
+        </div>
+        <div class="tab-content" id="area">
+            <div class="advanced-input">
+                <label for="areaFrom">From:</label>
+                <select id="areaFrom">
+                    <option value="m2">m²</option>
+                    <option value="cm2">cm²</option>
+                    <option value="km2">km²</option>
+                </select>
+                <label for="areaTo">To:</label>
+                <select id="areaTo">
+                    <option value="m2">m²</option>
+                    <option value="cm2">cm²</option>
+                    <option value="km2">km²</option>
+                </select>
+                <label for="areaValue">Value:</label>
+                <input type="number" id="areaValue">
+                <button onclick="convertArea()">Convert</button>
+            </div>
+        </div>
+        <div class="tab-content" id="volume">
+            <div class="advanced-input">
+                <label for="volumeFrom">From:</label>
+                <select id="volumeFrom">
+                    <option value="m3">m³</option>
+                    <option value="cm3">cm³</option>
+                    <option value="l">L</option>
+                </select>
+                <label for="volumeTo">To:</label>
+                <select id="volumeTo">
+                    <option value="m3">m³</option>
+                    <option value="cm3">cm³</option>
+                    <option value="l">L</option>
+                </select>
+                <label for="volumeValue">Value:</label>
+                <input type="number" id="volumeValue">
+                <button onclick="convertVolume()">Convert</button>
+            </div>
+        </div>
+        <div class="tab-content" id="time">
+            <div class="advanced-input">
+                <label for="timeFrom">From:</label>
+                <select id="timeFrom">
+                    <option value="s">Seconds</option>
+                    <option value="m">Minutes</option>
+                    <option value="h">Hours</option>
+                </select>
+                <label for="timeTo">To:</label>
+                <select id="timeTo">
+                    <option value="s">Seconds</option>
+                    <option value="m">Minutes</option>
+                    <option value="h">Hours</option>
+                </select>
+                <label for="timeValue">Value:</label>
+                <input type="number" id="timeValue">
+                <button onclick="convertTime()">Convert</button>
+            </div>
+        </div>
+        <div class="tab-content" id="finance">
+            <div class="advanced-input">
+                <label for="loanAmount">Loan Amount:</label>
+                <input type="number" id="loanAmount">
+                <label for="interestRate">Interest Rate (%):</label>
+                <input type="number" id="interestRate">
+                <label for="loanTerm">Loan Term (years):</label>
+                <input type="number" id="loanTerm">
+                <button onclick="calculateLoan()">Calculate</button>
+            </div>
+        </div>
+        <div class="tab-content" id="date">
+            <div class="advanced-input">
+                <label for="dateFrom">From Date:</label>
+                <input type="date" id="dateFrom">
+                <label for="dateTo">To Date:</label>
+                <input type="date" id="dateTo">
+                <button onclick="calculateDateDifference()">Calculate Difference</button>
+            </div>
+        </div>
+        <div class="tab-content" id="discount">
+            <div class="advanced-input">
+                <label for="originalPrice">Original Price:</label>
+                <input type="number" id="originalPrice">
+                <label for="discountPercentage">Discount Percentage:</label>
+                <input type="number" id="discountPercentage">
+                <button onclick="calculateDiscount()">Calculate</button>
+            </div>
+        </div>
+        <div class="tab-content" id="numeric">
+            <div class="advanced-input">
+                <label for="numericFrom">From:</label>
+                <select id="numericFrom">
+                    <option value="2">Binary</option>
+                    <option value="10">Decimal</option>
+                    <option value="16">Hexadecimal</option>
+                </select>
+                <label for="numericTo">To:</label>
+                <select id="numericTo">
+                    <option value="2">Binary</option>
+                    <option value="10">Decimal</option>
+                    <option value="16">Hexadecimal</option>
+                </select>
+                <label for="numericValue">Value:</label>
+                <input type="text" id="numericValue">
+                <button onclick="convertNumeric()">Convert</button>
+            </div>
+        </div>
+        <div class="tab-content" id="speed">
+            <div class="advanced-input">
+                <label for="speedFrom">From:</label>
+                <select id="speedFrom">
+                    <option value="mps">m/s</option>
+                    <option value="kph">km/h</option>
+                    <option value="mph">mph</option>
+                </select>
+                <label for="speedTo">To:</label>
+                <select id="speedTo">
+                    <option value="mps">m/s</option>
+                    <option value="kph">km/h</option>
+                    <option value="mph">mph</option>
+                </select>
+                <label for="speedValue">Value:</label>
+                <input type="number" id="speedValue">
+                <button onclick="convertSpeed()">Convert</button>
+            </div>
+        </div>
+        <div class="tab-content" id="temperature">
+            <div class="advanced-input">
+                <label for="tempFrom">From:</label>
+                <select id="tempFrom">
+                    <option value="c">Celsius</option>
+                    <option value="f">Fahrenheit</option>
+                    <option value="k">Kelvin</option>
+                </select>
+                <label for="tempTo">To:</label>
+                <select id="tempTo">
+                    <option value="c">Celsius</option>
+                    <option value="f">Fahrenheit</option>
+                    <option value="k">Kelvin</option>
+                </select>
+                <label for="tempValue">Value:</label>
+                <input type="number" id="tempValue">
+                <button onclick="convertTemperature()">Convert</button>
+            </div>
+        </div>
+        <div class="tab-content" id="bmi">
+            <div class="advanced-input">
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight">
+                <button onclick="calculateBMI()">Calculate BMI</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+        let buttons = document.querySelectorAll('.buttons button');
+        let tabs = document.querySelectorAll('.tab');
+        let tabContents = document.querySelectorAll('.tab-content');
+
+        buttons.forEach(button => {
+            button.addEventListener('click', function() {
+                if (this.classList.contains('clear')) {
+                    display.textContent = '0';
+                } else if (this.classList.contains('equals')) {
+                    try {
+                        display.textContent = eval(display.textContent);
+                    } catch (e) {
+                        display.textContent = 'Error';
+                    }
+                } else {
+                    if (display.textContent === '0') {
+                        display.textContent = this.textContent;
+                    } else {
+                        display.textContent += this.textContent;
+                    }
+                }
+            });
+        });
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(this.dataset.tab).classList.add('active');
+            });
+        });
+
+        function handleScientific(operation) {
+            let value = parseFloat(display.textContent);
+            switch(operation) {
+                case 'sin':
+                    display.textContent = Math.sin(value);
+                    break;
+                case 'cos':
+                    display.textContent = Math.cos(value);
+                    break;
+                case 'tan':
+                    display.textContent = Math.tan(value);
+                    break;
+                case 'log':
+                    display.textContent = Math.log10(value);
+                    break;
+                case 'ln':
+                    display.textContent = Math.log(value);
+                    break;
+                case 'sqrt':
+                    display.textContent = Math.sqrt(value);
+                    break;
+                case 'pow':
+                    display.textContent += '^';
+                    break;
+                case 'pi':
+                    display.textContent = Math.PI;
+                    break;
+            }
+        }
+
+        function convertArea() {
+            const from = document.getElementById('areaFrom').value;
+            const to = document.getElementById('areaTo').value;
+            const value = parseFloat(document.getElementById('areaValue').value);
+            const conversionFactors = {
+                m2: { cm2: 10000, km2: 0.000001 },
+                cm2: { m2: 0.0001, km2: 1e-10 },
+                km2: { m2: 1000000, cm2: 10000000000 }
+            };
+            let result;
+            if (from === to) {
+                result = value;
+            } else {
+                result = value * conversionFactors[from][to];
+            }
+            display.textContent = result.toExponential(2);
+        }
+
+        function convertVolume() {
+            const from = document.getElementById('volumeFrom').value;
+            const to = document.getElementById('volumeTo').value;
+            const value = parseFloat(document.getElementById('volumeValue').value);
+            const conversionFactors = {
+                m3: { cm3: 1000000, l: 1000 },
+                cm3: { m3: 0.000001, l: 0.001 },
+                l: { m3: 0.001, cm3: 1000 }
+            };
+            let result;
+            if (from === to) {
+                result = value;
+            } else {
+                result = value * conversionFactors[from][to];
+            }
+            display.textContent = result.toExponential(2);
+        }
+
+        function convertTime() {
+            const from = document.getElementById('timeFrom').value;
+            const to = document.getElementById('timeTo').value;
+            const value = parseFloat(document.getElementById('timeValue').value);
+            const conversionFactors = {
+                s: { m: 1/60, h: 1/3600 },
+                m: { s: 60, h: 1/60 },
+                h: { s: 3600, m: 60 }
+            };
+            let result;
+            if (from === to) {
+                result = value;
+            } else {
+                result = value * conversionFactors[from][to];
+            }
+            display.textContent = result.toFixed(2);
+        }
+
+        function calculateLoan() {
+            const amount = parseFloat(document.getElementById('loanAmount').value);
+            const rate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+            const term = parseFloat(document.getElementById('loanTerm').value) * 12;
+            const payment = (amount * rate * Math.pow(1 + rate, term)) / (Math.pow(1 + rate, term) - 1);
+            display.textContent = payment.toFixed(2);
+        }
+
+        function calculateDateDifference() {
+            const dateFrom = new Date(document.getElementById('dateFrom').value);
+            const dateTo = new Date(document.getElementById('dateTo').value);
+            const diffTime = Math.abs(dateTo - dateFrom);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            display.textContent = diffDays + ' days';
+        }
+
+        function calculateDiscount() {
+            const originalPrice = parseFloat(document.getElementById('originalPrice').value);
+            const discountPercentage = parseFloat(document.getElementById('discountPercentage').value);
+            const discountedPrice = originalPrice * (1 - discountPercentage / 100);
+            display.textContent = discountedPrice.toFixed(2);
+        }
+
+        function convertNumeric() {
+            const from = parseInt(document.getElementById('numericFrom').value);
+            const to = parseInt(document.getElementById('numericTo').value);
+            const value = document.getElementById('numericValue').value;
+            let result;
+            if (from === to) {
+                result = value;
+            } else {
+                const decimal = parseInt(value, from);
+                result = decimal.toString(to);
+            }
+            display.textContent = result.toUpperCase();
+        }
+
+        function convertSpeed() {
+            const from = document.getElementById('speedFrom').value;
+            const to = document.getElementById('speedTo').value;
+            const value = parseFloat(document.getElementById('speedValue').value);
+            const conversionFactors = {
+                mps: { kph: 3.6, mph: 2.23694 },
+                kph: { mps: 0.277778, mph: 0.621371 },
+                mph: { mps: 0.44704, kph: 1.60934 }
+            };
+            let result;
+            if (from === to) {
+                result = value;
+            } else {
+                result = value * conversionFactors[from][to];
+            }
+            display.textContent = result.toFixed(2);
+        }
+
+        function convertTemperature() {
+            const from = document.getElementById('tempFrom').value;
+            const to = document.getElementById('tempTo').value;
+            const value = parseFloat(document.getElementById('tempValue').value);
+            let result;
+            if (from === to) {
+                result = value;
+            } else if (from === 'c' && to === 'f') {
+                result = (value * 9/5) + 32;
+            } else if (from === 'c' && to === 'k') {
+                result = value + 273.15;
+            } else if (from === 'f' && to === 'c') {
+                result = (value - 32) * 5/9;
+            } else if (from === 'f' && to === 'k') {
+                result = (value - 32) * 5/9 + 273.15;
+            } else if (from === 'k' && to === 'c') {
+                result = value - 273.15;
+            } else if (from === 'k' && to === 'f') {
+                result = (value - 273.15) * 9/5 + 32;
+            }
+            display.textContent = result.toFixed(2);
+        }
+
+        function calculateBMI() {
+            const height = parseFloat(document.getElementById('height').value) / 100; // convert cm to m
+            const weight = parseFloat(document.getElementById('weight').value);
+            const bmi = weight / (height * height);
+            display.textContent = bmi.toFixed(1);
+        }
+    </script>
+</body>
+</html>
